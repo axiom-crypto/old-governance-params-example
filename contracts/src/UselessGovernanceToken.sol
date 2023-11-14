@@ -38,7 +38,7 @@ contract UselessGovernanceToken is ERC20, AxiomV2Client {
         bytes calldata callbackExtraData
     ) internal virtual override {
         // Parse results array
-        address nftHolder = address(bytes20(axiomResults[0]));
+        address nftHolder = address(uint160(uint256(axiomResults[0])));
         uint256 tokenId = uint256(axiomResults[1]);
         uint256 vote = uint256(axiomResults[2]);
 
@@ -61,7 +61,7 @@ contract UselessGovernanceToken is ERC20, AxiomV2Client {
 
         // Mark user as having voted
         // NOTE: Turned off for debugging
-        // didVote[nftHolder] = true;   
+        didVote[nftHolder] = true;
 
         // Emit events
         emit ParametersUpdated(callerAddr, tokenId, queryId, taxRate, rewardRate);
