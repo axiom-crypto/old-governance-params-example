@@ -2,16 +2,25 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin-contracts/token/ERC20/ERC20.sol";
+import "./UselessNFT.sol";
 import { AxiomV2Client } from './AxiomV2Client.sol';
 
 contract UselessGovernanceToken is ERC20, AxiomV2Client {
-    event ParametersUpdated(address indexed callerAddr, uint256 indexed tokenId, uint256 queryId, uint256 newTaxRate, uint256 newRewardRate);
+    event ParametersUpdated(
+        address indexed callerAddr,
+        uint256 indexed tokenId,
+        uint256 queryId,
+        uint256 newTaxRate,
+        uint256 newRewardRate,
+        uint256 totalVotes
+    );
 
     bytes32 public axiomCallbackQuerySchema;
-
     uint256 public taxRate;
     uint256 public rewardRate;
-    mapping(address => bool) public didVote;
+    uint256 public totalVotes;
+    mapping(bytes32 => bool) public didVote;
+    UselessNFT public uselessNFT;
 
     constructor(
         address _nftContract,
@@ -26,7 +35,12 @@ contract UselessGovernanceToken is ERC20, AxiomV2Client {
         axiomCallbackQuerySchema = _axiomCallbackQuerySchema;
         taxRate = _defaultTaxRate;
         rewardRate = _defaultRewardRate;
-        _mint(_nftContract, 10 ** 8 * 10 ** 18);
+        uselessNFT = UselessNFT(_nftContract);
+    }
+
+    function didUserVote(address user, uint256 tokenId) external view returns (bool) {
+        bytes32 holderTokenIdHash = keccak256(abi.encodePacked(user, tokenId));
+        return didVote[holderTokenIdHash];
     }
 
     function _axiomV2Callback(
@@ -42,29 +56,37 @@ contract UselessGovernanceToken is ERC20, AxiomV2Client {
         uint256 tokenId = uint256(axiomResults[1]);
         uint256 vote = uint256(axiomResults[2]);
 
+        // Get current owner of `tokenId`
+        address currentNftOwner = uselessNFT.ownerOf(tokenId);
+
+        // Hash the holder and tokenId to get an identifier for holder + tokenId 
+        bytes32 holderTokenIdHash = keccak256(abi.encodePacked(nftHolder, tokenId));
+
         // Validation checks
-        require(!didVote[nftHolder], "UselessGovernanceToken: nftHolder already voted");
+        require(!didVote[holderTokenIdHash], "UselessGovernanceToken: nftHolder already voted with this tokenId");
         require(nftHolder == callerAddr, "UselessGovernanceToken: nftHolder must be caller");
+        require(nftHolder == currentNftOwner, "UselessGovernanceToken: nftHolder must be current owner");
 
         // Update state based on user's vote
         if (vote == 1) {
             // Increase the tax and reward rates by 0.1%;
             taxRate += 1;
             rewardRate += 1;
+            totalVotes += 1;
         } else if (vote == 2) {
             // Decrease the tax and reward rates by 0.1%;
             taxRate -= 1;
             rewardRate -= 1;
+            totalVotes += 1;
         } else {
             revert("UselessGovernanceToken: invalid vote");
         }
 
         // Mark user as having voted
-        // NOTE: Turned off for debugging
-        didVote[nftHolder] = true;
+        didVote[holderTokenIdHash] = true;
 
         // Emit events
-        emit ParametersUpdated(callerAddr, tokenId, queryId, taxRate, rewardRate);
+        emit ParametersUpdated(callerAddr, tokenId, queryId, taxRate, rewardRate, totalVotes);
     }
 
     function _validateAxiomV2Call(
