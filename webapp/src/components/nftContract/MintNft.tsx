@@ -1,11 +1,14 @@
 "use client";
 
-import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
+import { useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
 import UselessNFT from "@/lib/abi/UselessNFT.json";
 import { Constants } from "@/shared/constants";
 import Button from "@/components/ui/Button";
+import ConnectWallet from "../ui/ConnectWallet";
 
 export default function MintNft() {
+  const { address } = useAccount();
+
   const { config } = usePrepareContractWrite({
     address: Constants.NFT_ADDR as `0x${string}`,
     abi: UselessNFT.abi,
@@ -18,6 +21,10 @@ export default function MintNft() {
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   })
+
+  if (address === undefined) {
+    return <ConnectWallet connected={""} />;
+  }
   
   const renderButtonText = () => {
     if (isLoading) {
