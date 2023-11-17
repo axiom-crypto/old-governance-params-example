@@ -80,14 +80,19 @@ export default function BuildQuery({
 
   if (voteValue === null) {
     return (
-      <div className="grid grid-cols-2 gap-4 w-fit">
-        <div className="flex flex-row font-mono gap-2">
-          <input type="radio" name="vote" value={1} onChange={() => setVoteValue(1)} />
-          YES
-        </div>
-        <div className="flex flex-row font-mono gap-2">
-          <input type="radio" name="vote" value={2} onChange={() => setVoteValue(2)} />
-          NO
+      <div className="flex flex-col items-center text-center gap-2">
+        <p>
+          Voting with tokenId {BigInt(tokenId).toString()}.
+        </p>
+        <div className="grid grid-cols-2 gap-4 w-fit">
+          <div className="flex flex-row font-mono gap-2">
+            <input type="radio" name="vote" value={1} onChange={() => setVoteValue(1)} />
+            YES
+          </div>
+          <div className="flex flex-row font-mono gap-2">
+            <input type="radio" name="vote" value={2} onChange={() => setVoteValue(2)} />
+            NO
+          </div>
         </div>
       </div>
     )
@@ -101,5 +106,7 @@ export default function BuildQuery({
     );
   }
 
-  return <SubmitVoteClient contractAbi={contractAbi} tokenId={tokenId} />;
+  
+
+  return <SubmitVoteClient />;
 }

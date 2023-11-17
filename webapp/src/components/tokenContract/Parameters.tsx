@@ -2,6 +2,8 @@ import { Constants } from "@/shared/constants";
 import UselessGovernanceToken from '@/lib/abi/UselessGovernanceToken.json';
 import { publicClient } from "@/lib/viemClient";
 
+export const revalidate = 0;
+
 export default async function Parameters() {
   const taxRate = await publicClient.readContract({
     address: Constants.ERC20_ADDR as `0x${string}`,

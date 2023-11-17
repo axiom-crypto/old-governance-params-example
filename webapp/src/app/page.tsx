@@ -40,21 +40,21 @@ export default async function Home({ searchParams }: PageProps) {
       </Title>
       <div className="flex flex-col text-center items-center gap-4">
         <p>
-          This autonomous governance example app gives users who have <b>minted</b> a project&apos;s NFT 
+          This autonomous governance example app gives users who have <b>minted</b> a project&apos;s NFT&nbsp;
           <b>and</b> are still holding it the ability to vote on a proposal and instantaneously contribute to the outcome.
         </p>
         <p>
-          Users who qualify have the ability to increase the transfer tax rate and staking rate on an example ERC-20 
+          Users who qualify have the ability to increase the transfer tax rate and staking rate on an example ERC-20
           token called UselessToken (which does not actually implement tax or staking functionality). 
         </p>
         <p>
-          The minting qualifications are low in this example so that anyone can run it, but you can imagine that if you were to 
-          have this run 1 year after an NFT&apos;s mint, it would be a very exclusive group of users who would be 
+          The minting qualifications are low in this example so that anyone can run it, but you can imagine that if you were to&nbsp;
+          have this run 1 year after an NFT&apos;s mint, it would be a very exclusive group of users who would be&nbsp;
           able to participate.
         </p>
         <p>
-          Eligible users who vote YES (1) on the proposal will increase the tax and staking rates by 
-          <span className="font-mono">0.1%</span>, while users who vote NO (2) will decrease the tax and staking rates 
+          Eligible users who vote YES (1) on the proposal will increase the tax and staking rates by&nbsp;
+          <span className="font-mono">0.1%</span>, while users who vote NO (2) will decrease the tax and staking rates&nbsp;
           by <span className="font-mono">0.1%</span>.
         </p>
         <Parameters />

@@ -2,6 +2,8 @@ import { Constants } from "@/shared/constants";
 import { bytes32 } from "@axiom-crypto/core";
 import { zeroAddress } from "viem";
 
+export const revalidate = 0;
+
 export async function findMostRecentMintTx(address: string): Promise<any | null> {
   let pageKey = "";
   while (pageKey !== undefined) {

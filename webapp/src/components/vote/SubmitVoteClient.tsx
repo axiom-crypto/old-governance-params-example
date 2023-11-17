@@ -1,29 +1,18 @@
 "use client";
 
-import { Constants } from "@/shared/constants";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useAccount,
-  useContractEvent,
-  useContractRead,
   useContractWrite,
   usePrepareContractWrite,
 } from "wagmi";
 import Button from "../ui/Button";
-import { useRouter } from "next/navigation";
 import { formatEther } from "viem";
 import Link from "next/link";
 import { useAxiomCircuit } from '@axiom-crypto/react';
 
-export default function SubmitVoteClient({
-  contractAbi,
-  tokenId,
-}: {
-  contractAbi: any[],
-  tokenId: string,
-}) {
+export default function SubmitVoteClient() {
   const { address } = useAccount();
-  const router = useRouter();
   const { axiom, builtQuery, payment } = useAxiomCircuit();
   const [showExplorerLink, setShowExplorerLink] = useState(false);
 
@@ -59,28 +48,6 @@ export default function SubmitVoteClient({
       }, 30000);
     }
   }, [isSuccess, setShowExplorerLink]);
-
-  const proofGeneratedAction = useCallback(() => {
-    router.push(`success/?address=${address}`);
-  }, [router, address]);
-
-  const proofValidationFailedAction = useCallback(() => {
-    if (isError) {
-      router.push(`fail/?address=${address}`);
-    }
-  }, [isError, router, address]);
-
-  // Monitor contract for `ParametersUpdated` event
-  useContractEvent({
-    address: Constants.ERC20_ADDR as `0x${string}`,
-    abi: contractAbi,
-    eventName: 'ParametersUpdated',
-    listener(log) {
-      console.log("Voted successfully");
-      console.log(log);
-      proofGeneratedAction();
-    },
-  });
 
   const renderButtonText = () => {
     if (isSuccess) {
