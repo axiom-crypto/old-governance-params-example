@@ -2,8 +2,6 @@ import LinkButton from "@/components/ui/LinkButton";
 import Title from "@/components/ui/Title";
 import { findMostRecentMintTx } from "@/lib/parseRecentTx";
 
-export const revalidate = 0;
-
 interface PageProps {
   params: Params;
   searchParams: SearchParams;
