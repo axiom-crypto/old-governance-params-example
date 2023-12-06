@@ -1,6 +1,6 @@
 {
   "name": "governance-params-example-webapp",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@axiom-crypto/core": "^2.2.50",
-    "@axiom-crypto/react": "^0.0.10",
+    "@axiom-crypto/client": "0.1.2",
+    "@axiom-crypto/react": "0.1.2-alpha.0",
     "@types/node": "20.6.2",
     "@types/react": "18.2.21",
     "@types/react-dom": "18.2.7",

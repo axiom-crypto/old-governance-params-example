@@ -1,8 +1,7 @@
 "use client";
 
 import { useAxiomCircuit } from "@axiom-crypto/react";
-import { CircuitInputs } from "../../lib/circuit";
-import { AxiomV2Callback } from "@axiom-crypto/core";
+import { CircuitInputs } from "../../lib/circuit/circuit";
 import { useEffect, useState } from "react";
 import LoadingAnimation from "../ui/LoadingAnimation";
 import SubmitVoteClient from "./SubmitVoteClient";
@@ -12,12 +11,16 @@ import LinkButton from "../ui/LinkButton";
 
 export default function BuildQuery({
   inputs,
-  callback,
+  callbackAddress,
+  callbackExtraData,
+  refundee,
   tokenId,
   contractAbi
 }: {
   inputs: CircuitInputs,
-  callback: AxiomV2Callback,
+  callbackAddress: string;
+  callbackExtraData: string;
+  refundee: string;
   tokenId: string,
   contractAbi: any[],
 }) {
@@ -26,7 +29,6 @@ export default function BuildQuery({
   const {
     build,
     builtQuery,
-    payment,
     setParams,
     areParamsSet
   } = useAxiomCircuit();
@@ -39,8 +41,8 @@ export default function BuildQuery({
       ...inputs,
       vote: voteValue,
     };
-    setParams(inputsWithVote, callback);
-  }, [voteValue, setParams, inputs, callback]);
+    setParams(inputsWithVote, callbackAddress, callbackExtraData, refundee);
+  }, [voteValue, setParams, inputs, callbackAddress, callbackExtraData, refundee]);
 
   useEffect(() => {
     const buildQuery = async () => {
@@ -98,15 +100,13 @@ export default function BuildQuery({
     )
   }
 
-  if (!builtQuery || !payment) {
+  if (!builtQuery) {
     return (
       <div className="flex flex-row items-center font-mono gap-2">
         {"Building Query"} <LoadingAnimation />
       </div>
     );
   }
-
-  
 
   return <SubmitVoteClient />;
 }

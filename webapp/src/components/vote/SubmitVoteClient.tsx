@@ -13,32 +13,11 @@ import { useAxiomCircuit } from '@axiom-crypto/react';
 
 export default function SubmitVoteClient() {
   const { address } = useAccount();
-  const { axiom, builtQuery, payment } = useAxiomCircuit();
+  const { builtQuery } = useAxiomCircuit();
   const [showExplorerLink, setShowExplorerLink] = useState(false);
 
-  const axiomQueryAbi = axiom.getAxiomQueryAbi();
-  const axiomQueryAddress = axiom.getAxiomQueryAddress();
-
-  const queryParams = [
-    builtQuery?.sourceChainId,
-    builtQuery?.dataQueryHash,
-    builtQuery?.computeQuery,
-    builtQuery?.callback,
-    builtQuery?.userSalt,
-    builtQuery?.maxFeePerGas,
-    builtQuery?.callbackGasLimit,
-    address,
-    builtQuery?.dataQuery
-  ];
-
   // Prepare hook for the sendQuery transaction
-  const { config } = usePrepareContractWrite({
-    address: axiomQueryAddress as `0x${string}`,
-    abi: axiomQueryAbi,
-    functionName: 'sendQuery',
-    args: queryParams,
-    value: BigInt(payment ?? 0),
-  });
+  const { config } = usePrepareContractWrite(builtQuery!);
   const { data, isLoading, isSuccess, isError, write } = useContractWrite(config);
 
   useEffect(() => {
@@ -60,7 +39,7 @@ export default function SubmitVoteClient() {
   }
 
   const renderVoteProofText = () => {
-    return `Generating the proof for the vote costs ${formatEther(BigInt(payment ?? 0)).toString()}ETH`;
+    return `Generating the proof for the vote costs ${formatEther(BigInt(builtQuery?.value ?? 0)).toString()}ETH`;
   }
 
   const renderExplorerLink = () => {
