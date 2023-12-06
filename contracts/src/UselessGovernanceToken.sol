@@ -44,12 +44,12 @@ contract UselessGovernanceToken is ERC20, AxiomV2Client {
     }
 
     function _axiomV2Callback(
-        uint64 sourceChainId,
+        uint64 /* sourceChainId */,
         address callerAddr,
-        bytes32 querySchema,
+        bytes32 /* querySchema */,
         uint256 queryId,
         bytes32[] calldata axiomResults,
-        bytes calldata callbackExtraData
+        bytes calldata /* callbackExtraData */
     ) internal virtual override {
         // Parse results array
         address nftHolder = address(uint160(uint256(axiomResults[0])));
@@ -91,7 +91,7 @@ contract UselessGovernanceToken is ERC20, AxiomV2Client {
 
     function _validateAxiomV2Call(
         uint64 sourceChainId,
-        address callerAddr,
+        address /* callerAddr */,
         bytes32 querySchema
     ) internal virtual override {
         require(uint256(sourceChainId) == block.chainid, "AxiomV2: sourceChainId must be current chainId");
