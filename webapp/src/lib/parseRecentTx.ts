@@ -1,6 +1,5 @@
 import { Constants } from "@/shared/constants";
-import { bytes32 } from "@axiom-crypto/core";
-import { zeroAddress } from "viem";
+import { zeroAddress, pad } from "viem";
 
 export const revalidate = 0;
 
@@ -17,8 +16,8 @@ export async function findMostRecentMintTx(address: string): Promise<any | null>
         for (const [idx, log] of receipt.logs.entries()) {
           if (
             log.topics[0] === Constants.TRANSFER_EVENT_SCHEMA &&
-            log.topics[1] === bytes32(zeroAddress) &&
-            log.topics[2].toLowerCase() === bytes32(address.toLowerCase())
+            log.topics[1] === pad(zeroAddress) &&
+            log.topics[2].toLowerCase() === pad(address.toLowerCase() as `0x${string}`)
           ) {
             return {
               logIdx: idx,

@@ -1,11 +1,11 @@
 import BuildQuery from "@/components/vote/BuildQuery";
 import Title from "@/components/ui/Title";
 import UselessGovernanceToken from "@/lib/abi/UselessGovernanceToken.json";
-import { CircuitInputs } from "@/lib/circuit";
+import { CircuitInputs } from "@/lib/circuit/circuit";
 import { publicClient } from "@/lib/viemClient";
 import { Constants } from "@/shared/constants";
-import { AxiomV2Callback, bytes32, getFunctionSelector } from "@axiom-crypto/core";
 import { redirect } from "next/navigation";
+import { pad } from "viem";
 
 interface PageProps {
   params: Params;
@@ -40,12 +40,6 @@ export default async function Vote({ searchParams }: PageProps) {
     vote: 0,  // Update this value later inside `BuildQuery` component
   }
 
-  // Build callback
-  const callback: AxiomV2Callback = {
-    target: Constants.ERC20_ADDR as `0x${string}`,
-    extraData: bytes32(connected),
-  }
-
   // Listen for `ParametersUpdated` event
   publicClient.watchContractEvent({
     address: Constants.ERC20_ADDR as `0x${string}`,
@@ -74,7 +68,9 @@ export default async function Vote({ searchParams }: PageProps) {
       <div className="flex flex-col gap-2 items-center">
         <BuildQuery
           inputs={inputs}
-          callback={callback}
+          callbackAddress={Constants.ERC20_ADDR}
+          callbackExtraData={pad(connected as `0x${string}`)}
+          refundee={connected}
           tokenId={tokenId}
           contractAbi={UselessGovernanceToken.abi}
         />

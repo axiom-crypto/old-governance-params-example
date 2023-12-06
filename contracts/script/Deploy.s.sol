@@ -7,7 +7,7 @@ import { UselessNFT } from '../src/UselessNFT.sol';
 
 contract DeployScript is Script {
     address public constant AXIOM_V2_QUERY_GOERLI_MOCK_ADDR = 0xf15cc7B983749686Cd1eCca656C3D3E46407DC1f;
-    bytes32 public constant QUERY_SCHEMA = 0x422a5dd156a3815376e5114237b0cefaa2ef9de0893bcd35ddd594c85ba1f45d;
+    bytes32 public constant QUERY_SCHEMA = 0x00d0e4a5e7243fdfd411ca1f85c898215ddaa06b4161d35bbb064c84b80f555b;
 
     function setUp() public {}
 
