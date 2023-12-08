@@ -23,7 +23,7 @@ export default async function Success({ searchParams }: PageProps) {
         Something went wrong
       </Title>
       <div className="text-center">
-        {"Something went wrong and you were not able to receive tokens."}
+        {"Something went wrong and you were not able to vote."}
       </div>
       <LinkButton
         label="Try again"
