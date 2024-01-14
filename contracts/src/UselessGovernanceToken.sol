@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin-contracts/token/ERC20/ERC20.sol";
 import "./UselessNFT.sol";
-import { AxiomV2Client } from './AxiomV2Client.sol';
+import { AxiomV2Client } from '@axiom-v2-client/client/AxiomV2Client.sol';
 
 contract UselessGovernanceToken is ERC20, AxiomV2Client {
     event ParametersUpdated(
@@ -90,11 +90,14 @@ contract UselessGovernanceToken is ERC20, AxiomV2Client {
     }
 
     function _validateAxiomV2Call(
+        AxiomCallbackType /* callbackType */,
         uint64 sourceChainId,
-        address /* callerAddr */,
-        bytes32 querySchema
+        address /* caller */,
+        bytes32 querySchema,
+        uint256 /* queryId */,
+        bytes calldata /* extraData */
     ) internal virtual override {
-        require(uint256(sourceChainId) == block.chainid, "AxiomV2: sourceChainId must be current chainId");
-        require(querySchema == axiomCallbackQuerySchema, "AxiomV2: query schema mismatch");
+        require(uint256(sourceChainId) == block.chainid, "UselessGovernanceToken: sourceChainId must be current chainId");
+        require(querySchema == axiomCallbackQuerySchema, "UselessGovernanceToken: query schema mismatch");
     }
 }
