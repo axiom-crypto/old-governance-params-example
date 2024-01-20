@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin-contracts/token/ERC20/ERC20.sol";
 import "./UselessNFT.sol";
-import { AxiomV2Client } from './AxiomV2Client.sol';
+import {AxiomV2Client} from "@axiom-crypto/v2-periphery/client/AxiomV2Client.sol";
 
 contract UselessGovernanceToken is ERC20, AxiomV2Client {
     event ParametersUpdated(
@@ -28,10 +28,7 @@ contract UselessGovernanceToken is ERC20, AxiomV2Client {
         bytes32 _axiomCallbackQuerySchema,
         uint256 _defaultTaxRate,
         uint256 _defaultRewardRate
-    )
-        ERC20("Useless Governance Token", "UGT")
-        AxiomV2Client(_axiomV2QueryAddress)
-    {
+    ) ERC20("Useless Governance Token", "UGT") AxiomV2Client(_axiomV2QueryAddress) {
         axiomCallbackQuerySchema = _axiomCallbackQuerySchema;
         taxRate = _defaultTaxRate;
         rewardRate = _defaultRewardRate;
@@ -44,9 +41,9 @@ contract UselessGovernanceToken is ERC20, AxiomV2Client {
     }
 
     function _axiomV2Callback(
-        uint64 /* sourceChainId */,
+        uint64, /* sourceChainId */
         address callerAddr,
-        bytes32 /* querySchema */,
+        bytes32, /* querySchema */
         uint256 queryId,
         bytes32[] calldata axiomResults,
         bytes calldata /* callbackExtraData */
@@ -59,7 +56,7 @@ contract UselessGovernanceToken is ERC20, AxiomV2Client {
         // Get current owner of `tokenId`
         address currentNftOwner = uselessNFT.ownerOf(tokenId);
 
-        // Hash the holder and tokenId to get an identifier for holder + tokenId 
+        // Hash the holder and tokenId to get an identifier for holder + tokenId
         bytes32 holderTokenIdHash = keccak256(abi.encodePacked(nftHolder, tokenId));
 
         // Validation checks
@@ -90,11 +87,16 @@ contract UselessGovernanceToken is ERC20, AxiomV2Client {
     }
 
     function _validateAxiomV2Call(
+        AxiomCallbackType, /* callbackType */
         uint64 sourceChainId,
-        address /* callerAddr */,
-        bytes32 querySchema
+        address, /* caller */
+        bytes32 querySchema,
+        uint256, /* queryId */
+        bytes calldata /* extraData */
     ) internal virtual override {
-        require(uint256(sourceChainId) == block.chainid, "AxiomV2: sourceChainId must be current chainId");
-        require(querySchema == axiomCallbackQuerySchema, "AxiomV2: query schema mismatch");
+        require(
+            uint256(sourceChainId) == block.chainid, "UselessGovernanceToken: sourceChainId must be current chainId"
+        );
+        require(querySchema == axiomCallbackQuerySchema, "UselessGovernanceToken: query schema mismatch");
     }
 }
